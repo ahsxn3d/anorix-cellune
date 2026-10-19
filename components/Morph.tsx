@@ -1,10 +1,9 @@
 "use client";
-import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import Lazy3D from "./kit/Lazy3D";
 import { Arrow } from "./kit/ui";
-const CellScene = dynamic(() => import("./CellScene"), { ssr: false });
+const shots = [["/img/hero-mol.webp", "Caffeine molecule, ball-and-stick (PubChem CID 2519)", "md:translate-x-[13%]", "max-md:object-[32%_30%]"], ["/img/hero-dock.webp", "HIV-1 protease with a bound inhibitor (PDB 1HSG)", "md:translate-x-[8%]", "max-md:object-[56%_30%]"], ["/img/hero-crystal.webp", "Layered oxide crystal lattice", "", "max-md:object-[84%_30%]"]];
 const ch = [
   ["01 · Molecules", "AI that does chemistry."],
   ["02 · Biophysics", "Physics in the loop."],
@@ -12,17 +11,21 @@ const ch = [
 ];
 const body = ["Three AI models where math, biology and physics meet: one proposes molecules, one simulates how they bind and mutate, one designs crystals and battery materials.", "The Biophysics Simulator docks candidate molecules into protein targets and scores how mutations change binding, so ideas are tested in silico first.", "The 3D Crystal & Battery Material Designer builds periodic structures atom by atom and screens them for the properties a cell or battery needs."];
 export default function Morph() {
-  const root = useRef<HTMLElement>(null), progress = useRef(0);
+  const root = useRef<HTMLElement>(null);
   const [c, setC] = useState(0);
   useEffect(() => {
-    const st = ScrollTrigger.create({ trigger: root.current, start: "top top", end: "bottom bottom", onUpdate: (s) => { progress.current = s.progress; const v = s.progress < 0.3 ? 0 : s.progress < 0.66 ? 1 : 2; setC((p) => (p === v ? p : v)); } });
+    const st = ScrollTrigger.create({ trigger: root.current, start: "top top", end: "bottom bottom", onUpdate: (s) => { const v = s.progress < 0.3 ? 0 : s.progress < 0.66 ? 1 : 2; setC((p) => (p === v ? p : v)); } });
     return () => st.kill();
   }, []);
   return (
     <section ref={root} className="relative h-[280vh] bg-petrol text-paper">
-      <div className="sticky top-0 h-[100svh] overflow-hidden">
-        <Lazy3D poster="/img/molecule_0e2b2e_9fe6c8_c9b8ff.webp" posterSm="/img/molecule_0e2b2e_9fe6c8_c9b8ff-m.webp" priority eager alt="" render={({ onReady, running }) => <CellScene progress={progress} running={running} onReady={onReady} />} />
-        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-petrol/90 via-transparent to-transparent md:bg-gradient-to-r md:from-petrol/80 md:via-petrol/10" />
+      <div className="sticky top-0 h-[100svh] overflow-hidden bg-[#02272a]">
+        {shots.map(([src, alt, sh], i) => (
+          <div key={src} className={`absolute inset-0 transition-[opacity,transform] duration-[1200ms] ease-[cubic-bezier(.16,1,.3,1)] motion-reduce:transition-none ${c === i ? "scale-100 opacity-100" : "scale-[1.04] opacity-0"}`}>
+            <div className={`absolute inset-0 max-md:-inset-x-[30%] max-md:bottom-[46%] max-md:top-[10%] ${sh}`}><Image src={src} alt={alt} fill priority={i === 0} sizes="(max-width:767px) 160vw, 100vw" className="object-cover max-md:object-contain" /></div>
+          </div>
+        ))}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-[#02272a]/90 via-transparent to-transparent md:bg-gradient-to-r md:from-[#02272a]/80 md:via-[#02272a]/10" />
         <div className="wrap relative flex h-full flex-col justify-end pb-[10vh] md:justify-center md:pb-0">
           <div className="relative min-h-[300px] md:min-h-[420px]">
             {ch.map(([e, h], i) => (
