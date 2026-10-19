@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Arrow } from "./kit/ui";
-const shots = [["/img/hero-mol.webp", "Caffeine molecule, ball-and-stick (PubChem CID 2519)", "md:translate-x-[13%]", "max-md:object-[32%_30%]"], ["/img/hero-dock.webp", "HIV-1 protease with a bound inhibitor (PDB 1HSG)", "md:translate-x-[8%]", "max-md:object-[56%_30%]"], ["/img/hero-crystal.webp", "Layered oxide crystal lattice", "", "max-md:object-[84%_30%]"]];
+const shots = [["/img/hero-mol.webp", "Caffeine molecule, ball-and-stick (PubChem CID 2519)", "md:translate-x-[20%] xl:translate-x-[13%]", "max-md:object-[32%_30%]"], ["/img/hero-dock.webp", "HIV-1 protease with a bound inhibitor (PDB 1HSG)", "md:translate-x-[8%]", "max-md:object-[56%_30%]"], ["/img/hero-crystal.webp", "Layered oxide crystal lattice", "", "max-md:object-[84%_30%]"]];
 const ch = [
   ["01 · Molecules", "AI that does chemistry."],
   ["02 · Biophysics", "Physics in the loop."],
