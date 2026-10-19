@@ -6,7 +6,7 @@ import Motion from "@/components/kit/Motion";
 const display = localFont({ src: "../public/fonts/space-grotesk-latin-wght-normal.woff2", variable: "--f-display", weight: "100 900", display: "swap" });
 const sans = localFont({ src: "../public/fonts/inter-latin-wght-normal.woff2", variable: "--f-sans", weight: "100 900", display: "swap" });
 
-export const metadata: Metadata = { title: "Cellune — Materials that grow", description: "Cellune engineers living materials: cell-grown fibres, self-healing films and biofoundry tools. A concept by Anorix.", openGraph: { title: "Cellune — Materials that grow", description: "Cellune engineers living materials: cell-grown fibres, self-healing films and biofoundry tools. A concept by Anorix.", type: "website" } };
+export const metadata: Metadata = { title: "Anorix Science — AI models for chemistry, biophysics and materials", description: "Bio-Molecular Discovery Engine, Biophysics Simulator and 3D Crystal & Battery Material Designer: AI × chemistry with math, bio and physics. By Anorix.", openGraph: { title: "Anorix Science — AI models for chemistry, biophysics and materials", description: "Bio-Molecular Discovery Engine, Biophysics Simulator and 3D Crystal & Battery Material Designer: AI × chemistry with math, bio and physics. By Anorix.", type: "website" } };
 export const viewport: Viewport = { themeColor: "#0e2b2e", width: "device-width", initialScale: 1 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

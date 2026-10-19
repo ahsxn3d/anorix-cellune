@@ -6,11 +6,11 @@ import Lazy3D from "./kit/Lazy3D";
 import { Arrow } from "./kit/ui";
 const CellScene = dynamic(() => import("./CellScene"), { ssr: false });
 const ch = [
-  ["01 · Molecule", "Materials that grow."],
-  ["02 · Cell", "Programmed in the cell."],
-  ["03 · Fibre", "Spun into fibre."],
+  ["01 · Molecules", "AI that does chemistry."],
+  ["02 · Biophysics", "Physics in the loop."],
+  ["03 · Materials", "Crystals by design."],
 ];
-const body = ["Cellune designs proteins, grows them in engineered cells and turns them into materials that out-perform the plastics they replace.", "Our biofoundry tunes each strain to make one protein, cleanly, at scale — fermented like beer, not drilled like oil.", "The result: a fibre stronger than nylon by weight, fully compostable, already in trial garments with three partners."];
+const body = ["Three AI models where math, biology and physics meet: one proposes molecules, one simulates how they bind and mutate, one designs crystals and battery materials.", "The Biophysics Simulator docks candidate molecules into protein targets and scores how mutations change binding, so ideas are tested in silico first.", "The 3D Crystal & Battery Material Designer builds periodic structures atom by atom and screens them for the properties a cell or battery needs."];
 export default function Morph() {
   const root = useRef<HTMLElement>(null), progress = useRef(0);
   const [c, setC] = useState(0);
@@ -30,7 +30,7 @@ export default function Morph() {
                 <p className="eyebrow text-mint">{e}</p>
                 {i === 0 ? <h1 className="display mt-5 text-[clamp(56px,7.6vw,128px)]"><span className="kit-mask"><span className="kit-line">{h}</span></span></h1> : <h2 className="display mt-5 text-[clamp(52px,7vw,120px)]">{h}</h2>}
                 <p className={`mt-6 max-w-[44ch] text-[16px] leading-[1.7] text-paper/75 ${i === 0 ? "kit-soft" : ""}`}>{body[i]}</p>
-                {i === 0 && <a href="#platform" className="btn pointer-events-auto mt-8 bg-lilac text-ink hover:bg-mint">See the platform <Arrow /></a>}
+                {i === 0 && <a href="#platform" className="btn pointer-events-auto mt-8 bg-lilac text-ink hover:bg-mint">See the models <Arrow /></a>}
               </div>
             ))}
           </div>
