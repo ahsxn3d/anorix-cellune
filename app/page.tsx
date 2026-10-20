@@ -1,3 +1,4 @@
 import Morph from "@/components/Morph";
-import { Nav, Platform, Process, Science, Papers, Footer } from "@/components/Sections";
-export default function Page() { return (<><Nav /><main><Morph /><Platform /><Process /><Science /><Papers /></main><Footer /></>); }
+import { Platform, Process, Science, Papers } from "@/components/Sections";
+import Shell from "@/components/Shell";
+export default function Page() { return (<Shell path="/"><Morph /><Platform /><Process /><Science /><Papers /></Shell>); }

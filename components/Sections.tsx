@@ -1,39 +1,15 @@
 "use client";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import dynamic from "next/dynamic";
+import { models, notes } from "@/lib/content";
+import { useEffect, useRef } from "react";
+const Particles = dynamic(() => import("./Particles"), { ssr: false });
+const still = (v: number) => ({ current: v });
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Arrow, Marquee } from "./kit/ui";
+import { Arrow } from "./kit/ui";
 
-export function Nav() {
-  const [open, setOpen] = useState(false);
-  return (
-    <header className="fixed inset-x-0 top-0 z-50">
-      <div className="wrap flex items-center justify-between pt-5">
-        <a href="#" aria-label="Anorix Science home" className="flex items-center gap-2.5 rounded-full bg-deep/70 py-2 pl-2 pr-4 text-paper ring-1 ring-paper/10 backdrop-blur-md">
-          <svg viewBox="0 0 32 32" className="h-7 w-7" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#c9b8ff" /><circle cx="16" cy="16" r="6" fill="#0e2b2e" /><circle cx="24" cy="9" r="2.4" fill="#0e2b2e" /></svg>
-          <span className="display text-[19px] tracking-[-0.02em]">anorix science</span>
-        </a>
-        <nav aria-label="Primary" className="hidden items-center gap-1 rounded-full bg-deep/70 p-1.5 text-[14px] text-paper ring-1 ring-paper/10 backdrop-blur-md md:flex">
-          {[["Models", "#platform"], ["How it runs", "#process"], ["Science", "#science"], ["Contact", "#contact"]].map(([l, h]) => <a key={l} href={h} className="rounded-full px-4 py-2 transition-colors hover:bg-paper/10">{l}</a>)}
-          <a href="#contact" className="ml-1 rounded-full bg-mint px-4 py-2 font-medium text-ink transition-colors hover:bg-lilac">Request a demo</a>
-        </nav>
-        <button aria-label="Menu" aria-expanded={open} onClick={() => setOpen(!open)} className="grid h-11 w-11 place-items-center rounded-full bg-mint text-ink md:hidden"><span className={`block h-0.5 w-5 bg-current shadow-[0_6px_0_currentColor] transition-transform ${open ? "translate-y-[3px] rotate-45 shadow-none" : "-translate-y-[3px]"}`} /></button>
-      </div>
-      <div className={`wrap transition-[opacity,transform] duration-500 md:hidden ${open ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-3 opacity-0"}`}>
-        <nav aria-label="Mobile" className="mt-3 grid gap-1 rounded-3xl bg-deep/95 p-3 text-paper ring-1 ring-paper/10">
-          {[["Models", "#platform"], ["How it runs", "#process"], ["Science", "#science"], ["Contact", "#contact"]].map(([l, h]) => <a key={l} href={h} onClick={() => setOpen(false)} className="display rounded-2xl px-4 py-3 text-[28px]">{l}</a>)}
-        </nav>
-      </div>
-    </header>
-  );
-}
-
-const products = [
-  { k: "Model 01", n: "Bio-Molecular Discovery Engine", d: "Molecular discovery. In: a target and your constraints. Out: ranked candidate molecules with predicted properties, viewable in 3D.", img: "/img/sci-mol.webp", tag: "Chemistry", bg: "bg-deep text-paper" },
-  { k: "Model 02", n: "Biophysics Simulator", d: "Molecular docking and mutation analysis. In: a protein structure and a ligand. Out: binding poses, scores and per-mutation effects.", img: "/img/sci-dock.webp", tag: "Biology · physics", bg: "bg-paper text-ink" },
-  { k: "Model 03", n: "3D Crystal & Battery Material Designer", d: "Materials design. In: elements and target properties. Out: candidate crystal lattices you can rotate, inspect and export.", img: "/img/sci-crystal.webp", tag: "Materials", bg: "bg-lilac text-ink" },
-];
+const bgs = ["bg-deep text-paper", "bg-paper text-ink", "bg-lilac text-ink"], pbg = ["#081d1f", "#e3e8e2", "#bfaef5"], pcol: [string, string][] = [["#9fe6c8", "#c9b8ff"], ["#2b6a63", "#7b5cff"], ["#3b2a8a", "#10201f"]];
+const products = models.map((m, i) => ({ ...m, k: `Model ${m.no}`, n: m.name, d: m.short, bg: bgs[i], i }));
 
 export function Platform() {
   return (
@@ -46,12 +22,12 @@ export function Platform() {
         <div className="mt-16 grid gap-5 md:grid-cols-3">
           {products.map((p, i) => (
             <article key={p.n} className={`hov-wrap group relative flex min-h-[520px] flex-col overflow-hidden rounded-[28px] ${p.bg}`} data-fade data-delay={i * 0.08}>
-              <div className="relative h-[280px] overflow-hidden"><div className="hov absolute inset-0"><Image src={p.img} alt={`${p.n} visual`} fill sizes="(min-width:768px) 33vw, 100vw" className="object-cover object-[78%_50%]" /></div></div>
+              <div className="relative h-[280px] overflow-hidden"><Particles pos={still(0)} path={[p.shape]} dense={0.3} z={10} size={40} bg={pbg[p.i]} colors={pcol[p.i]} spin={0.15} /></div>
               <div className="flex flex-1 flex-col p-7">
                 <div className="flex items-center justify-between"><span className="eyebrow opacity-70">{p.k}</span><span className="rounded-full border border-current/20 px-3 py-1 text-[12px]">{p.tag}</span></div>
                 <h3 className="display mt-4 text-[40px]">{p.n}</h3>
                 <p className="mt-3 max-w-[36ch] text-[15px] leading-[1.6] opacity-75">{p.d}</p>
-                <a href="#contact" className="mt-auto flex items-center gap-2 pt-6 text-[14px] font-medium">Request a demo <span className="grid h-8 w-8 place-items-center rounded-full bg-current/10 transition-transform duration-500 group-hover:rotate-45"><Arrow /></span></a>
+                <a href={`/models/${p.slug}`} className="mt-auto flex items-center gap-2 pt-6 text-[14px] font-medium">Open the model <span className="grid h-8 w-8 place-items-center rounded-full bg-current/10 transition-transform duration-500 group-hover:rotate-45"><Arrow /></span></a>
               </div>
             </article>
           ))}
@@ -105,7 +81,7 @@ export function Science() {
   return (
     <section id="science" className="bg-paper py-[clamp(96px,11vw,170px)] text-ink">
       <div className="wrap grid items-center gap-12 lg:grid-cols-12">
-        <div data-clip className="relative aspect-[4/3] overflow-hidden rounded-[28px] lg:col-span-6"><div data-clip-img className="absolute inset-0"><Image src="/img/sci-dock-lilac.webp" alt="HIV-1 protease backbone with a bound inhibitor (PDB 1HSG)" fill sizes="(min-width:1024px) 50vw, 100vw" className="object-cover object-[80%_50%]" /></div></div>
+        <div className="relative aspect-[4/3] overflow-hidden rounded-[28px] lg:col-span-6"><Particles pos={still(0)} path={[5]} dense={0.45} z={11} size={46} bg="#c9b8ff" colors={["#3b2a8a", "#0e2b2e"]} spin={0.08} /><span className="eyebrow absolute bottom-5 left-5 text-ink/70">Live · protein backbone with a docked ligand</span></div>
         <div className="lg:col-span-5 lg:col-start-8">
           <p className="eyebrow text-violet">The science</p>
           <p className="display mt-6 text-[clamp(32px,3.2vw,52px)] leading-[1.08]" data-reveal="words">Chemistry is a search problem with physics as the referee. The models search; the simulator keeps them honest.</p>
@@ -118,7 +94,7 @@ export function Science() {
   );
 }
 
-const papers = [["Model 01", "Bio-Molecular Discovery Engine — model card", "Soon"], ["Model 02", "Biophysics Simulator — docking & mutation analysis notes", "Soon"], ["Model 03", "3D Crystal & Battery Material Designer — model card", "Soon"], ["Overview", "AI × chemistry: how the three models share one loop", "Soon"]];
+const papers = notes.slice(0, 4);
 export function Papers() {
   return (
     <section className="bg-deep py-[clamp(96px,10vw,150px)] text-paper">
@@ -127,7 +103,7 @@ export function Papers() {
         <ul className="mt-12 border-t border-paper/10">
           {papers.map(([j, t, y]) => (
             <li key={t} className="group border-b border-paper/10">
-              <a href="#contact" className="grid grid-cols-12 items-center gap-4 py-7 transition-colors duration-500 hover:text-mint">
+              <a href="/research" className="grid grid-cols-12 items-center gap-4 py-7 transition-colors duration-500 hover:text-mint">
                 <span className="eyebrow col-span-12 text-paper/50 md:col-span-3">{j}</span>
                 <span className="display col-span-10 text-[clamp(22px,2.2vw,34px)] leading-[1.15] md:col-span-7">{t}</span>
                 <span className="col-span-2 flex items-center justify-end gap-4 text-[14px] tabular-nums text-paper/50">{y}<span className="transition-transform duration-500 group-hover:translate-x-1 group-hover:-translate-y-1"><Arrow /></span></span>
@@ -140,22 +116,3 @@ export function Papers() {
   );
 }
 
-export function Footer() {
-  const [ok, setOk] = useState(false);
-  useEffect(() => { ScrollTrigger.refresh(); }, []);
-  return (
-    <footer id="contact" className="overflow-hidden bg-lilac text-ink">
-      <div className="border-b border-ink/10 py-6"><Marquee items={["AI × chemistry", "Math · Bio · Physics", "Docking & mutations", "Crystals & batteries"]} className="display text-[clamp(26px,2.8vw,42px)]" sep="✳" /></div>
-      <div className="wrap grid gap-12 py-[clamp(80px,9vw,140px)] lg:grid-cols-12">
-        <div className="lg:col-span-6"><p className="eyebrow text-violet">Work with the models</p><h2 className="display mt-5 text-[clamp(52px,7vw,124px)]" data-reveal="lines">Let&apos;s discover what&apos;s next.</h2></div>
-        <form className="self-end lg:col-span-5 lg:col-start-8" onSubmit={(e) => { e.preventDefault(); setOk(true); }}>
-          <label htmlFor="em" className="eyebrow">Work email</label>
-          <div className="mt-3 flex items-center gap-3 border-b border-ink/30 pb-3"><input id="em" type="email" required placeholder="you@company.com" className="w-full bg-transparent text-[20px] outline-none placeholder:text-ink/40" /><button className="btn shrink-0 bg-ink text-paper hover:bg-violet">{ok ? "Thanks, we'll write" : "Send"}</button></div>
-          <div className="mt-6 flex flex-wrap gap-2">{["Drug discovery", "Protein engineering", "Battery materials", "Research collab"].map((t) => <label key={t} className="cursor-pointer"><input type="checkbox" className="peer sr-only" /><span className="block rounded-full border border-ink/25 px-4 py-2 text-[14px] transition-colors peer-checked:bg-ink peer-checked:text-paper">{t}</span></label>)}</div>
-        </form>
-      </div>
-      <p className="display select-none px-[clamp(16px,3.4vw,48px)] text-[23vw] leading-[.78] text-ink/[0.1]" aria-hidden="true">anorix</p>
-      <div className="wrap flex flex-col justify-between gap-3 border-t border-ink/10 py-8 text-[12px] text-ink/60 md:flex-row"><span>© 2026 Anorix. Science AI models by Ahsan Javed; specs are placeholders until model cards are published.</span><span>Designed &amp; built by Anorix</span></div>
-    </footer>
-  );
-}
